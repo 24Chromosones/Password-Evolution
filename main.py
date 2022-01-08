@@ -2,15 +2,17 @@ import random
 import string
 import logic
 
+
 # Initialization
 alphabet = string.ascii_letters
 alphabet = [letter for letter in alphabet]
 password = ""
-population_max = 100  # changeable, has to be an even number though
+password_length = 56
+population_max = 1000  # changeable
 population = []
 
-
-for character in range(56):
+# Creating password
+for character in range(password_length):
     password += random.choice(alphabet)
 
 
@@ -27,43 +29,43 @@ class Unit:
     def show_attempt(self):
         return self.attempt
 
-    def birth(self, other_parent):
+    def birth(self, other_parent):  # reproduction code
         self.new_attempt = ""
-        for i, v in enumerate(self.attempt):
+        for i, pw in enumerate(self.attempt):
             num = random.randint(1, 10)
             if 1 <= num <= 5:
-                self.new_attempt += v
+                self.new_attempt += pw
             else:
                 self.new_attempt += other_parent.show_attempt()[i]
 
         return Unit(new=False, attempt=self.new_attempt)
 
-    def mutation(self):
+    def mutation(self):  # mutation code
         num = random.randint(1, 100)
         if num == 100:
             index = random.randint(0, len(self.attempt)-1)
             self.attempt = "".join([v if i != index else random.choice(alphabet) for i, v in enumerate([j for j in self.attempt])])
 
 
-def create_population():
+def create_population():  # creates new random units
     while len(population) < population_max:
         population.append(Unit(new=True))
 
 
-def purge():
+def purge():  # purges bottom 50%
     global population
-    temp = [(i, i.show_fitness()) for i in population]
+    temp = [(unit, unit.show_fitness()) for unit in population]
     middle = (len(population))//2
     temp.sort(key=lambda x: x[1])
     population = [i for i, v in temp[middle::]]
 
 
-def display_best():
+def display_best():  # displays the best unit
     fitness_list = [(i.show_attempt(), i.show_fitness()) for i in population]
-    return max(fitness_list, key=lambda x:x[1])
+    return max(fitness_list, key=lambda x: x[1])
 
 
-def main():
+def main():  # main loop
     evolutions = 0
     create_population()
     while True:
