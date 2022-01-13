@@ -1,5 +1,6 @@
 import random
-
+import numpy
+import scipy
 
 def similar(word1, word2):
     matches = 0
@@ -18,3 +19,5 @@ def pair(population):
     random.shuffle(temp)
     temp = list(zip(temp[0::2], temp[1::2]))
     return temp
+
+

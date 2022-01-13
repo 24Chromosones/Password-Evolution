@@ -1,13 +1,14 @@
 import random
 import string
 import logic
-
+import pandas as pd
+import plotly.express as px
 
 # Initialization
 alphabet = string.ascii_letters
 alphabet = [letter for letter in alphabet]
 password = ""
-password_length = 56
+password_length = 76  # default 56
 population_max = 1000  # changeable
 population = []
 
@@ -60,27 +61,43 @@ def purge():  # purges bottom 50%
     population = [i for i, v in temp[middle::]]
 
 
-def display_best():  # displays the best unit
-    fitness_list = [(i.show_attempt(), i.show_fitness()) for i in population]
-    return max(fitness_list, key=lambda x: x[1])
+def display_best(pop):  # displays the best unit
+    fitness_list = [(i.show_attempt(), i.show_fitness()) for i in pop]
+    return max(fitness_list, key=lambda x: x[1]) # returns the best attempt based on the max i.show_fitness
 
 
 def main():  # main loop
     evolutions = 0
+    total_population = []
     create_population()
     while True:
+        evolutions += 1
+        for unit in population:
+            unit.mutation()
         purge()
         pairs = logic.pair(population)
         for pair in pairs:
             population.append(pair[0].birth(pair[1]))
+        total_population.append(population)
+        print(display_best(population))
+        if display_best(population)[1] == 1:
+            print(f"Answer found: {display_best(population)[0]}\nPassword was {password}\nIt took {evolutions} evolutions")
+            return total_population
         create_population()
-        print(display_best())
-        if display_best()[1] == 1:
-            print(f"Answer found: {display_best()[0]}\nPassword was {password}\nIt took {evolutions} evolutions")
-            return
-        for unit in population:
-            unit.mutation()
-        evolutions += 1
 
-
-main()
+if __name__ == "__main__":
+    test = main()
+    df = pd.DataFrame(
+        {
+            'Population':[pop for pop in test],
+            'FitList': [[unit.show_fitness() for unit in pop] for pop in test],
+            'Best': [display_best(i)[1] for i in test],
+            "Frames": range(len(test))
+        }
+    )
+    df = df.explode(column=['Population', "FitList"])
+    print(df)
+    fig = px.histogram(df, x='FitList', animation_frame="Frames", nbins=15, range_x=(0,1), range_y=(0,750))
+    fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 100
+    fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 5
+    fig.show()
