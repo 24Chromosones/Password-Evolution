@@ -1,5 +1,5 @@
 # Password evolution algorithm
-An evolution algorithm to find an ASCII password. CURRENTLY UNFINISHED 
+An evolution algorithm to find an ASCII password. 
 
 ![example-gif](https://imgur.com/5Np8TVS.gif)
 
@@ -12,3 +12,6 @@ TLDR: creation > [mutation > bottom 50% die > reproduction > new units introduce
 
 ## Setup
 Install plotly 
+
+## Bugs
+Over time the number of bins on the graph decreases until the end.
