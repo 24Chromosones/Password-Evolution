@@ -1,7 +1,7 @@
 # Password evolution algorithm
 An evolution algorithm to find an ASCII password. CURRENTLY UNFINISHED 
 
-![example-gif](https://imgur.com/5Np8TVS)
+![example-gif](https://imgur.com/5Np8TVS.gif)
 
 ## Process
 After the first creation of the population. Then in the main loop mutations have
