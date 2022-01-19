@@ -1,6 +1,5 @@
 import random
-import numpy
-import scipy
+
 
 def similar(word1, word2):
     matches = 0

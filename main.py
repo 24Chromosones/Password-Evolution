@@ -89,7 +89,7 @@ if __name__ == "__main__":
     test = main()
     df = pd.DataFrame(
         {
-            'Population':[pop for pop in test],
+            'Population': [pop for pop in test],
             'FitList': [[unit.show_fitness() for unit in pop] for pop in test],
             'Best': [display_best(i)[1] for i in test],
             "Frames": range(len(test))
